@@ -1,0 +1,88 @@
+use proyecto6dba;
+
+CREATE TABLE  `TipoUsuario` (
+  `codigo` INT NOT NULL COMMENT 'Este atributo corresponde al codigo que se le asigna a cada tipo de usuario,  si el codigo=1 entonces su nombre será común, si es codigo=2 su nombre será Administrador',
+  `nombre_tipo` VARCHAR(15) NOT NULL COMMENT 'En este atributo se agrega el nombre asignado a cada tipo de usuario, si el codigo=1 entonces su nombre será común, si es codigo=2 su nombre será Administrador',
+  PRIMARY KEY (`codigo`))
+COMMENT = 'En esta tabla se generan los tipos de usuarios que pueden ser almacenados en el sistema';
+
+ CREATE TABLE USUARIO (
+  id_usuario INT NOT NULL COMMENT 'Identificador único de usuario',
+  contraseña VARCHAR(45) NOT NULL COMMENT 'contraseña a la que accede al sistema. la contraseña se almacena cifrada de acuerdo a las politicas de seguridad',
+  primary key (id_usuario));
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Captura`
+-- -----------------------------------------------------
+CREATE TABLE `Captura` (
+  `codigo_captura` INT NOT NULL AUTO_INCREMENT COMMENT 'Este atributo funciona como indice de la captura',
+  `tiempoInicio` DATETIME NOT NULL COMMENT 'En este atributo se almacena el tiempo de inicio de la medición',
+  `duracion` INT NOT NULL COMMENT 'En este atributo se agrega el tiempode fin de la medición ',
+  `Usuario_id_Usuario` INT NOT NULL,
+  PRIMARY KEY (`codigo_captura`),
+  INDEX `fk_Captura_Usuario1_idx` (`Usuario_id_Usuario` ASC),
+  CONSTRAINT `fk_Captura_Usuario1`
+    FOREIGN KEY (`Usuario_id_Usuario`)
+    REFERENCES `Usuario` (`id_Usuario`))
+COMMENT = 'Esta tabla corresponde a las capturas que genera el software, cabe destacar que la captura se genera por toda una red';
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Servicios`
+-- -----------------------------------------------------
+CREATE TABLE `Servicios` (
+  `idServicios` INT NOT NULL AUTO_INCREMENT,
+  `nombreServicio` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idServicios`));
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Paquete`
+-- -----------------------------------------------------
+CREATE TABLE `Paquete` (
+  `idPaquete` INT NOT NULL AUTO_INCREMENT,
+  `ipOrigen` VARCHAR(45) NOT NULL,
+  `puertoDestino` INT NULL,
+  `ipDestino` VARCHAR(45) NOT NULL,
+  `Captura_codigo_captura` INT NOT NULL,
+  `Servicios_idServicios` INT NOT NULL,
+  `tamaño` INT NOT NULL,
+  PRIMARY KEY (`idPaquete`),
+  INDEX `fk_Paquete_Captura1_idx` (`Captura_codigo_captura` ASC),
+  INDEX `fk_Paquete_Servicios1_idx` (`Servicios_idServicios` ASC),
+  CONSTRAINT `fk_Paquete_Captura1`
+    FOREIGN KEY (`Captura_codigo_captura`)
+    REFERENCES `Captura` (`codigo_captura`),
+  CONSTRAINT `fk_Paquete_Servicios1`
+    FOREIGN KEY (`Servicios_idServicios`)
+    REFERENCES `Servicios` (`idServicios`));
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Protocolo`
+-- -----------------------------------------------------
+CREATE TABLE `Protocolo` (
+  `idProtocolo` INT NOT NULL AUTO_INCREMENT,
+  `nombreProtocolo` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idProtocolo`));
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Protocolo_has_Paquete`
+-- -----------------------------------------------------
+CREATE TABLE `Protocolo_has_Paquete` (
+  `Protocolo_idProtocolo` INT NOT NULL,
+  `Paquete_idPaquete` INT NOT NULL,
+  PRIMARY KEY (`Protocolo_idProtocolo`, `Paquete_idPaquete`),
+  INDEX `fk_Protocolo_has_Paquete_Paquete1_idx` (`Paquete_idPaquete` ASC),
+  INDEX `fk_Protocolo_has_Paquete_Protocolo1_idx` (`Protocolo_idProtocolo` ASC),
+  CONSTRAINT `fk_Protocolo_has_Paquete_Protocolo1`
+    FOREIGN KEY (`Protocolo_idProtocolo`)
+    REFERENCES `Protocolo` (`idProtocolo`),
+  CONSTRAINT `fk_Protocolo_has_Paquete_Paquete1`
+    FOREIGN KEY (`Paquete_idPaquete`)
+    REFERENCES `Paquete` (`idPaquete`));
+
+
+
+
