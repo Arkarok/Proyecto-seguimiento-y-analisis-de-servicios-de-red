@@ -1,0 +1,71 @@
+use proyecto6dba;
+
+select * from protocolo;
+select * from servicios;
+select * from usuario;
+select * from paquete;
+select * from protocolo_has_paquete;
+select * from captura;
+select * from tipousuario;
+
+INSERT INTO tipousuario VALUES(0,'comun');
+INSERT INTO tipousuario VALUES(1,'administrador');
+INSERT INTO usuario VALUES(404669, 'perrito44',0);
+INSERT INTO usuario VALUES(400886, 'perrito45',1);
+
+INSERT INTO protocolo VALUES(1, 'ETH');
+INSERT INTO protocolo VALUES(2, 'IP');
+INSERT INTO protocolo VALUES(3, 'UDP');
+INSERT INTO protocolo VALUES(4, 'TCP');
+INSERT INTO protocolo VALUES(5, 'Otro');
+
+INSERT INTO servicios VALUES(1, 'HTTP');
+INSERT INTO servicios VALUES(2, 'FTP');
+INSERT INTO servicios VALUES(3, 'DNS');
+INSERT INTO servicios VALUES(4, 'SMTP');
+INSERT INTO servicios VALUES(5, 'POP3');
+INSERT INTO servicios VALUES(6, 'DHCP');
+INSERT INTO servicios VALUES(7, 'HTTPS');
+INSERT INTO servicios VALUES(8, 'FTPS');
+INSERT INTO servicios VALUES(9, 'Otro');
+
+select  nombreProtocolo, count(idProtocolo) 
+from usuario usu, captura cap, Paquete paq, Protocolo_has_Paquete php, Protocolo prot
+where usu.id_usuario= 404669
+and cap.codigo_captura=36
+and usu.id_usuario=cap.Usuario_id_usuario
+and cap.codigo_captura = paq.Captura_codigo_captura
+and paq.idPaquete=php.Paquete_idPaquete
+and php.Protocolo_idProtocolo = prot.idProtocolo
+group by (nombreProtocolo);
+
+select idPaquete, tamaño 
+from usuario usu, captura cap, Paquete paq
+where usu.id_usuario= 404669
+and  cap.codigo_captura=3
+and usu.id_usuario=cap.Usuario_id_usuario
+and cap.codigo_captura = paq.Captura_codigo_captura;
+
+select  nombreServicio, count(idServicios) 
+from usuario usu, captura cap, Paquete paq, Servicios serv
+where usu.id_usuario= 404669
+and cap.codigo_captura=22
+and usu.id_usuario=cap.Usuario_id_usuario
+and cap.codigo_captura = paq.Captura_codigo_captura
+and paq.Servicios_idServicios=serv.idServicios
+group by (nombreServicio);
+
+select mac, count(mac) 
+from usuario usu, captura cap, Paquete paq
+where usu.id_usuario= 404669
+and  cap.codigo_captura=51
+and usu.id_usuario=cap.Usuario_id_usuario
+and cap.codigo_captura = paq.Captura_codigo_captura
+group by (mac);
+
+SELECT * FROM usuario;
+
+SELECT * FROM usuario 
+where usuario.TipoUsuario_codigo!=1;
+
+SELECT * FROM Captura WHERE Usuario_id_Usuario=404669;

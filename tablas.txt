@@ -5,13 +5,21 @@ CREATE TABLE  `TipoUsuario` (
   `nombre_tipo` VARCHAR(15) NOT NULL COMMENT 'En este atributo se agrega el nombre asignado a cada tipo de usuario, si el codigo=1 entonces su nombre será común, si es codigo=2 su nombre será Administrador',
   PRIMARY KEY (`codigo`))
 COMMENT = 'En esta tabla se generan los tipos de usuarios que pueden ser almacenados en el sistema';
-
- CREATE TABLE USUARIO (
-  id_usuario INT NOT NULL COMMENT 'Identificador único de usuario',
-  contraseña VARCHAR(45) NOT NULL COMMENT 'contraseña a la que accede al sistema. la contraseña se almacena cifrada de acuerdo a las politicas de seguridad',
-  primary key (id_usuario));
-
 -- -----------------------------------------------------
+-- Table `mydb`.`Usuario`
+-- -----------------------------------------------------
+ CREATE TABLE `Usuario` (
+  `id_usuario` INT NOT NULL COMMENT 'Identificador único de usuario',
+  `contraseña` VARCHAR(45) NOT NULL COMMENT 'contraseña a la que accede al sistema. la contraseña se almacena cifrada de acuerdo a las politicas de seguridad',
+  `TipoUsuario_codigo` INT NOT NULL,
+  PRIMARY KEY (`id_usuario`),
+  INDEX `fk_Usuario_TipoUsuario1_idx` (`TipoUsuario_codigo` ASC),
+  CONSTRAINT `fk_Usuario_TipoUsuario1`
+    FOREIGN KEY (`TipoUsuario_codigo`)
+    REFERENCES `TipoUsuario` (`codigo`)ON DELETE CASCADE)
+ COMMENT = 'En esta tabla se almacenan los usuario que podrán ingresar al sistema';
+
+- -----------------------------------------------------
 -- Table `mydb`.`Captura`
 -- -----------------------------------------------------
 CREATE TABLE `Captura` (
@@ -23,7 +31,7 @@ CREATE TABLE `Captura` (
   INDEX `fk_Captura_Usuario1_idx` (`Usuario_id_Usuario` ASC),
   CONSTRAINT `fk_Captura_Usuario1`
     FOREIGN KEY (`Usuario_id_Usuario`)
-    REFERENCES `Usuario` (`id_Usuario`))
+    REFERENCES `Usuario` (`id_Usuario`)ON DELETE CASCADE)
 COMMENT = 'Esta tabla corresponde a las capturas que genera el software, cabe destacar que la captura se genera por toda una red';
 
 
@@ -47,15 +55,16 @@ CREATE TABLE `Paquete` (
   `Captura_codigo_captura` INT NOT NULL,
   `Servicios_idServicios` INT NOT NULL,
   `tamaño` INT NOT NULL,
+  `mac` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idPaquete`),
   INDEX `fk_Paquete_Captura1_idx` (`Captura_codigo_captura` ASC),
   INDEX `fk_Paquete_Servicios1_idx` (`Servicios_idServicios` ASC),
   CONSTRAINT `fk_Paquete_Captura1`
     FOREIGN KEY (`Captura_codigo_captura`)
-    REFERENCES `Captura` (`codigo_captura`),
+    REFERENCES `Captura` (`codigo_captura`)ON DELETE CASCADE,
   CONSTRAINT `fk_Paquete_Servicios1`
     FOREIGN KEY (`Servicios_idServicios`)
-    REFERENCES `Servicios` (`idServicios`));
+    REFERENCES `Servicios` (`idServicios`)ON DELETE CASCADE);
 
 
 -- -----------------------------------------------------
@@ -78,10 +87,10 @@ CREATE TABLE `Protocolo_has_Paquete` (
   INDEX `fk_Protocolo_has_Paquete_Protocolo1_idx` (`Protocolo_idProtocolo` ASC),
   CONSTRAINT `fk_Protocolo_has_Paquete_Protocolo1`
     FOREIGN KEY (`Protocolo_idProtocolo`)
-    REFERENCES `Protocolo` (`idProtocolo`),
+    REFERENCES `Protocolo` (`idProtocolo`)ON DELETE CASCADE,
   CONSTRAINT `fk_Protocolo_has_Paquete_Paquete1`
     FOREIGN KEY (`Paquete_idPaquete`)
-    REFERENCES `Paquete` (`idPaquete`));
+    REFERENCES `Paquete` (`idPaquete`)ON DELETE CASCADE);
 
 
 
