@@ -4,7 +4,7 @@
 
 ---
 
-# Requirements
+# Requerimientos
 
 Para correr el proyecto necesitas tener instalado:
 
@@ -12,4 +12,7 @@ Para correr el proyecto necesitas tener instalado:
 - [MySQL](https://dev.mysql.com/downloads/installer/)
 
 ---
+
+# Contenido
+
 El objetivo de este proyecto es capturar tramas de red que permitan identificar que protocolos y servicios estan siendo utilizados en una red determinada.
